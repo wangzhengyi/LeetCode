@@ -2,13 +2,14 @@ import java.util.*;
 
 public class SingleNumber {
 	public static void main(String[] args) {
-		int n, key, A[] = new int[1000];
+		int n, key, A[];
 		
 		Scanner cin = new Scanner(System.in);
 		
 		while (cin.hasNext()) {
 			// 接收数组A
 			n = cin.nextInt();
+			A = new int[n];
 			for (int i = 0; i < n; i ++) {
 				A[i] = cin.nextInt();
 			}

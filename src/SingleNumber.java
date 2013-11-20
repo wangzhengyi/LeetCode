@@ -1,24 +1,36 @@
+import java.util.*;
+
 public class SingleNumber {
 	public static void main(String[] args) {
-		int[] A = new int[] { 1, 1, 2, 2, 3, 4, 3 };
+		int n, key, A[] = new int[1000];
+		
+		Scanner cin = new Scanner(System.in);
+		
+		while (cin.hasNext()) {
+			// 接收数组A
+			n = cin.nextInt();
+			for (int i = 0; i < n; i ++) {
+				A[i] = cin.nextInt();
+			}
+			
+			// 调用方法
+			SingleNumber sn = new SingleNumber();
 
-		SingleNumber sn = new SingleNumber();
+			key = sn.singleNumber(A, n);
 
-		int key = sn.singleNumber(A);
-
-		System.out.println(key);
+			System.out.println(key);
+			
+		}
 	}
 
-	public int singleNumber(int[] A) {
+	public int singleNumber(int[] A,  int n) {
 		// IMPORTANT: Please reset any member data you declared, as
 		// the same Solution instance will be reused for each test case.
 
-		int key = 0;
-
-		for (int i = 0; i < A.length; i++) {
-			key ^= A[i];
+		for (int i = 1; i < A.length; i++) {
+			A[0] ^= A[i];
 		}
 
-		return key;
+		return A[0];
 	}
 }

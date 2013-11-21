@@ -4,10 +4,11 @@ public class JavaSort {
 	public static void main(String args[]) {
 		Scanner cin = new Scanner(System.in);
 
-		int A[], n;
+		int A[], n, key, loc;
 
 		while (cin.hasNext()) {
 			n = cin.nextInt();
+			key = cin.nextInt();
 			A = new int[n];
 
 			for (int i = 0; i < n; i++) {
@@ -22,12 +23,34 @@ public class JavaSort {
 
 			// heapSort(A, n);
 
-			// quickSort(A, 0, n - 1);
+			quickSort(A, 0, n - 1);
 
-			mergeSort(A, 0, n - 1);
+			// mergeSort(A, 0, n - 1);
 
-			printArr(A);
+			// printArr(A);
+
+			loc = binarySearch(A, n, key);
+
+			System.out.println(loc);
 		}
+	}
+
+	public static int binarySearch(int A[], int n, int key) {
+		int bt = 0, ed = n - 1, mid;
+
+		while (bt <= ed) {
+			mid = bt + (ed - bt) / 2;
+
+			if (A[mid] == key) {
+				return mid;
+			} else if (A[mid] > key) {
+				ed = mid - 1;
+			} else {
+				bt = mid + 1;
+			}
+		}
+
+		return -1;
 	}
 
 	/**

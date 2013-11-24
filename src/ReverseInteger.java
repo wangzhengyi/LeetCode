@@ -21,17 +21,16 @@ public class ReverseInteger {
 
 		if (x < 0) {
 			flag = true;
-			original = x * -1;
+			x = x * -1;
 		} else {
 			flag = false;
-			original = x;
 		}
 
 		for (original = 0; x != 0; x /= 10) {
 			a = x % 10;
 			if (flag) {
 				if (10 * original + a > min) {
-					return (int) (min * -1);
+					return (int)(min * -1);
 				}
 			} else {
 				if (10 * original + a > max) {
@@ -41,6 +40,9 @@ public class ReverseInteger {
 
 			original = 10 * original + a;
 		}
+
+		if (flag)
+			original *= -1;
 
 		return (int) original;
 	}

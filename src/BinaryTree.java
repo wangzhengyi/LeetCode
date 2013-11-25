@@ -26,7 +26,7 @@ public class BinaryTree {
 		TreeNode root = null;
 
 		if (count >= str.length || str[count++].equals("#")) {
-			root = null;
+			return null;
 		} else {
 			root = new TreeNode(str[count - 1]);
 			root.lchild = createBtree();

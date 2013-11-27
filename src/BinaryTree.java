@@ -98,5 +98,7 @@ public class BinaryTree {
 			postTraverse(root);
 			System.out.println();
 		}
+		
+		cin.close();
 	}
 }

@@ -22,6 +22,8 @@ public class SingleNumber {
 			System.out.println(key);
 			
 		}
+		
+		cin.close();
 	}
 
 	public int singleNumber(int[] A,  int n) {

@@ -19,6 +19,8 @@ public class TwoSum {
 
 			System.out.println("index1=" + loc[0] + ", index2=" + loc[1]);
 		}
+		
+		cin.close();
 	}
 
 	public static int[] twosum(int numbers[], int target) {

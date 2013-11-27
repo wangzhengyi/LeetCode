@@ -12,6 +12,7 @@ public class ReverseInteger {
 
 			System.out.println(x);
 		}
+		cin.close();
 	}
 
 	public static int reverse(int x) {

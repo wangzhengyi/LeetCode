@@ -28,6 +28,8 @@ public class MergeSortArray {
 			}
 			System.out.println();
 		}
+		
+		cin.close();
 	}
 
 	public static void merge(int A[], int m, int B[], int n) {

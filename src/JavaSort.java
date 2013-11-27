@@ -33,6 +33,8 @@ public class JavaSort {
 
 			System.out.println(loc);
 		}
+		
+		cin.close();
 	}
 
 	public static int binarySearch(int A[], int n, int key) {

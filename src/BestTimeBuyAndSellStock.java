@@ -17,6 +17,20 @@ public class BestTimeBuyAndSellStock {
         return income;
     }
 
+    public static int maxProfit2(int[] prices) {
+        if (prices.length == 0) return 0;
+        
+        int i, income;
+        
+        for (i = 0, income = 0; i < prices.length - 1; i ++) {
+            if (prices[i + 1] - prices[i] > 0) {
+                income += prices[i + 1] - prices[i];
+            }
+        }
+        
+        return income;
+    }
+
     public static void main(String args[]) {
         Scanner cin = new Scanner(System.in);
         int i, n, value, prices[];
@@ -31,7 +45,11 @@ public class BestTimeBuyAndSellStock {
 
             // Best Time to Buy and Sell Stock One
             value = maxProfit1(prices);
-            System.out.println(value);
+            
+            // Best Time to Buy and Sell Stock Two
+            value = maxProfit2(prices);
+            
+            System.out.println(value);      
         }
 
         cin.close();

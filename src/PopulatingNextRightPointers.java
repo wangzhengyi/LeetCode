@@ -8,6 +8,11 @@ public class PopulatingNextRightPointers {
         }
     }
 
+    /**
+     * 增加next指针
+     * 
+     * @param root
+     */
     public static void connect(TreeLinkNode root) {
         if (root == null) return;
 

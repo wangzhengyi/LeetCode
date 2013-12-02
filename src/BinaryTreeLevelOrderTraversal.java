@@ -17,7 +17,6 @@ public class BinaryTreeLevelOrderTraversal {
         ArrayList<ArrayList<Integer>> list = new ArrayList<ArrayList<Integer>>();
         LinkedList<TreeNode> queue = new LinkedList<TreeNode>();
         TreeNode p;
-        int data;
 
         if (root == null) {
             return list;

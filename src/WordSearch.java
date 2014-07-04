@@ -54,7 +54,8 @@ public class WordSearch {
 
     public static void main(String[] args) {
         Scanner cin = new Scanner(System.in);
-
+        
+        // just a test
         while (cin.hasNext()) {
             int row = Integer.parseInt(cin.nextLine());
             int col = Integer.parseInt(cin.nextLine());

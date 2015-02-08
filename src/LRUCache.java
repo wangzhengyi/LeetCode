@@ -1,123 +1,113 @@
 import java.util.HashMap;
 
-
 public class LRUCache {
-    /**
-     * 声明双向链表节点
-     * 
-     * @author wzy
-     * 
-     */
-    private static class DoubleListNode {
-        DoubleListNode pre;
-        DoubleListNode next;
-        int value;
-        int key;
+	private HashMap<Integer, DoubleListNode> mHashMap;
+	private DoubleListNode head;
+	private DoubleListNode tail;
+	private int capacity;
+	private int currentsize;
 
-        public DoubleListNode(int key, int value) {
-            this.key = key;
-            this.value = value;
-            this.pre = this.next = null;
-        }
-    }
+	public LRUCache(int capacity) {
+		this.capacity = capacity;
+		this.currentsize = 0;
+		this.mHashMap = new HashMap<Integer, DoubleListNode>();
+		this.head = this.tail = null;
+	}
 
-    private HashMap<Integer, DoubleListNode> hashMap;
+	public int get(int key) {
+		if (mHashMap.containsKey(key)) {
+			DoubleListNode tNode = mHashMap.get(key);
+			if (tNode == tail) {
+				if (currentsize > 1) {
+					removeNodeFromTail();
+					moveNodeToHead(tNode);
+				}
+			} else if (tNode == head) {
+				// do nothing
+			} else {
+				tNode.pre.next = tNode.next;
+				tNode.next.pre = tNode.pre;
+				moveNodeToHead(tNode);
+			}
+			return mHashMap.get(key).value;
+		} else {
+			return -1;
+		}
+	}
 
-    private DoubleListNode head;
+	private void removeNodeFromTail() {
+		tail = tail.pre;
+		if (tail != null) {
+			tail.next = null;
+		}
+	}
 
-    private DoubleListNode tail;
+	private void moveNodeToHead(DoubleListNode node) {
+		head.pre = node;
+		node.next = head;
+		node.pre = null;
+		head = node;
+	}
 
-    private int capacity;
+	public void set(int key, int value) {
+		if (mHashMap.containsKey(key)) {
+			// 更新HashMap中对应的值，并将key对应的Node移至队头
+			DoubleListNode tNode = mHashMap.get(key);
+			tNode.value = value;
+			if (tNode == tail) {
+				if (currentsize > 1) {
+					removeNodeFromTail();
+					moveNodeToHead(tNode);
+				}
+			} else if (tNode == head) {
+				// do nothing
+			} else {
+				tNode.pre.next = tNode.next;
+				tNode.next.pre = tNode.pre;
+				moveNodeToHead(tNode);
+			}
 
-    private int currentSize;
+			mHashMap.put(key, tNode);
+		} else {
+			DoubleListNode node = new DoubleListNode(key, value);
+			mHashMap.put(key, node);
+			if (currentsize == 0) {
+				head = tail = node;
+				currentsize += 1;
+			} else if (currentsize < capacity) {
+				moveNodeToHead(node);
+				currentsize += 1;
+			} else {
+				// 删除tail节点，并且增加一个head节点
+				mHashMap.remove(tail.key);
+				removeNodeFromTail();
 
-    public LRUCache(int capacity) {
-        this.capacity = capacity;
-        this.currentSize = 0;
-        hashMap = new HashMap<Integer, LRUCache.DoubleListNode>(capacity);
-        this.head = this.tail = null;
-    }
+				// 增加头节点
+				moveNodeToHead(node);
+			}
+		}
+	}
 
-    public int get(int key) {
-        DoubleListNode res = hashMap.get(key);
+	public static void main(String[] args) {
+		LRUCache lruCache = new LRUCache(1);
+		lruCache.set(2, 1);
+		System.out.println(lruCache.get(2));
+		lruCache.set(3, 2);
+		System.out.println(lruCache.get(2));
+		System.out.println(lruCache.get(3));
+	}
 
-        if (res != null) {
-            moveNodeToHead(res);
-            return res.value;
-        } else {
-            return -1;
-        }
-    }
+	private static class DoubleListNode {
+		public DoubleListNode pre;
+		public DoubleListNode next;
+		public int key;
+		public int value;
 
-    public void set(int key, int value) {
-        DoubleListNode node = hashMap.get(key);
+		public DoubleListNode(int key, int value) {
+			this.key = key;
+			this.value = value;
+			this.pre = this.next = null;
+		}
+	}
 
-        if (node == null) {
-            node = new DoubleListNode(key, value);
-
-            if (currentSize >= capacity) {
-                hashMap.remove(tail.key);
-                removeNodeFromTail();
-            } else {
-                currentSize++;
-            }
-        } else {
-            node.value = value;
-        }
-
-        if (currentSize == 1) {
-            head = node;
-            tail = node;
-        }
-
-        moveNodeToHead(node);
-        hashMap.put(key, node);
-    }
-
-    private void moveNodeToHead(DoubleListNode node) {
-        if (node == head) {
-            return;
-        }
-
-        if (node.next != null) {
-            node.next.pre = node.pre;
-        }
-
-        if (node.pre != null) {
-            node.pre.next = node.next;
-        }
-
-        if (node == tail) {
-            tail = node.pre;
-        }
-
-        if (head != null) {
-            node.next = head;
-            head.pre = node;
-        }
-
-        head = node;
-        node.pre = null;
-    }
-
-    private void removeNodeFromTail() {
-        if (tail != null) {
-            if (tail.pre != null) {
-                tail.pre.next = null;
-            } else {
-                head = null;
-            }
-
-            tail = tail.pre;
-        }
-    }
-
-    public static void main(String[] args) {
-        LRUCache lruCache = new LRUCache(1);
-        lruCache.set(2, 1);
-        System.out.println(lruCache.get(2));
-        lruCache.set(3, 2);
-        System.out.println(lruCache.get(2));
-        System.out.println(lruCache.get(3));
-    }
 }

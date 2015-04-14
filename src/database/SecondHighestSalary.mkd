@@ -1,0 +1,4 @@
+# **去重法**
+```sql
+select MAX(Salary) from Employee where Salary < (select MAX(salary) from Employee);
+```

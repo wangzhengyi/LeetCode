@@ -1,0 +1,66 @@
+# **题目**
+
+SQL query to delete all duplicate email entries in a table named Person, keeping only unique emails based on its smallest Id.
+
+ | Id | Email            |
+ |----|------------------|
+ | 1  | john@example.com |
+ | 2  | bob@example.com  |
+ | 3  | john@example.com |
+
+ Id is the primary key column for this table.
+ For example, after running your query, the above Person table should have the following rows:
+
+ | Id | Email            |
+ |----|------------------|
+ | 1  | john@example.com |
+ | 2  | bob@example.com  |
+
+ ****
+ # **思路**
+
+题目的意思是：从Person表中找出Email重复的记录，只保留Id最小的记录，删除其他的重复记录。
+
+因为是先查找，再删除，所以我们也分两步进行:
+
+1. 找出Email重复的记录
+
+```sql
+select p1.Id from Person as p1 inner join Person as p2 where p1.Email = p2.Email and p1.ID > p2.ID;
+```
+2. 删除重复记录
+
+```
+delete from Person where Id in ($sql1);
+```
+
+思路虽然是好的，但是这样写却是错误的：
+
+```sql
+delete from Person where Id in (select p1.Id from Person as p1 inner join Person as p2 where p1.Email = p2.Email and p1.ID > p2.ID);
+```
+错误信息为:
+```text
+You can't specify target table 'Person' for update in FROM clause
+```
+意思是：在MYSQL中，禁止在from子句中指定被更新的目标表。
+
+所以，需要使用MYSQL规定的delete语法：
+
+1. 从数据表t1中把那些id值在数据表t2里有匹配的记录全删掉:
+```sql
+delete t1 from t1,t2 where t1.id = t2.id;
+or
+delete from t1 using t1,t2 where t1.id = t2.id;
+```
+2. 从数据表t1里在数据表t2里没有匹配的记录查找出来并删除掉
+```sql
+delete t1 from t1 left join t2 on t1.id=t2.id where t2.id is null;
+```
+
+****
+# **AC SQL**
+
+```sql
+delete p1 from Person as p1 inner join Person as p2 on p1.ID > p2.ID and p1.Email = p2.Email;
+```

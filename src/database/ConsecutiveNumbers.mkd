@@ -1,0 +1,92 @@
+# **题目**
+
+Write a SQL query to rank scores. If there is a tie between two scores, both should have the same ranking. Note that after a tie, the next ranking number should be the next consecutive integer value. In other words, there should be no "holes" between ranks.
+
+| Id | Score |
+|----|-------|
+| 1  | 3.50  |
+| 2  | 3.65  |
+| 3  | 4.00  |
+| 4  | 3.85  |
+| 5  | 4.00  |
+| 6  | 3.65  |
+
+For example, given the above Scores table, your query should generate the following report (order by highest score):
+
+| Score | Rank |
+|-------|------|
+| 4.00  | 1    |
+| 4.00  | 1    |
+| 3.85  | 2    |
+| 3.65  | 3    |
+| 3.65  | 3    |
+| 3.50  | 4    |
+
+****
+# **思路**
+
+官方讨论里需要用到MYSQL的用户自定义变量了，但是我没用哈，我用的是笛卡尔乘积。
+
+****
+
+# **笛卡尔乘积**
+
+笛卡尔乘积其实就是两个表的级联，所以接下来我分析一下具体的步骤：
+
+1. 选择所有不重复的Score数据，组成新表s2。
+
+```sql
+(select distinct Score from Scores) as s2;
+```
+
+2. 级联Scores表和s2表，级联的条件是Scores表的Score字段值小于等于s2表Score字段的值。
+
+```sql
+select * from Scores as s1 left join (select distinct Score from Scores) as s2 on s1.Score <= s2.Score;
+```
+
+这样级联后，生成的新表内容如下：
+
+| s1.Score | id   | s2.Score |
+|----------|------|----------|
+| 3.5 | 1 | 3.5 |
+| 3.5 | 1 | 3.65 |
+| 3.5 | 1 | 3.85 |
+| 3.5 | 1 | 4.0  |
+| 3.65 | 2 | 3.65 |
+| 3.65 | 2 | 3.85 |
+| 3.65 | 2 | 4 |
+| 4 | 3 | 4 |
+
+这里只举了前三个数据的例子，通过这个临时表，其实我们应该已经能得出解决思路了。我们接下来，可以通过先用id字段做聚集，然后使用count(s2.Score)的数量作为Rank字段。
+
+3. 排序数据(AC SQL)。
+
+```sql
+select s1.Score as Score, count(s2.Score) as Rank from Scores as s1 left join (select distinct Score from Scores) as s2 on s1.Score <= s2.Score group by s1.id order by s1.Score desc;
+```
+
+****
+# **用户自定义变量**
+
+****
+## **自定义变量概述**
+
+用户自定义的变量可以先在用户变量中保存值，然后再以后引用它。这样，可以将值从一个语句传递到另一个语句。用户变量与连接有关，也就是说，一个客户端定义的变量不能被其它客户端看到或使用。当客户端退出时，该客户端连接的所有变量都将自动释放。
+
+****
+## **自定义变量语法**
+
+在select语句中赋值给用户变量的语法是：@var_name := value，这里的var_name是变量名，value是你正在检索的值。
+
+****
+## **AC SQL**
+
+```sql
+select Score, Rank from (
+select Score, @curRank := @curRank + IF(@prevScore = Score, 0, 1) as Rank, @prevScore := Score from
+Scores as s, (select @curRank := 0) as r, (select @prevScore := NULL) as p
+order by Score DESC
+) as t;
+```
+

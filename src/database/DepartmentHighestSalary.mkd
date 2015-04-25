@@ -1,0 +1,52 @@
+# **题目**
+
+The Employee table holds all employees. Every employee has an Id, a salary, and there is also a column for the department Id.
+
+| Id | Name  | Salary | DepartmentId |
+|----|-------|--------|--------------|E
+| 1  | Joe   | 70000  | 1            |
+| 2  | Henry | 80000  | 2            |
+| 3  | Sam   | 60000  | 2            |
+| 4  | Max   | 90000  | 1            |
+
+The Department table holds all departments of the company.
+
+| Id | Name     |
+|----|----------|
+| 1  | IT       |
+| 2  | Sales    |
+
+Write a SQL query to find employees who have the highest salary in each of the departments. For the above tables, Max has the highest salary in the IT department and Henry has the highest salary in the Sales department.
+
+| Department | Employee | Salary |
+|------------|----------|--------|
+| IT         | Max      | 90000  |
+| Sales      | Henry    | 80000  |
+
+****
+# **思路**
+
+看到这到题目，我首先考虑的是数据库级联。具体思路如下：
+
+1. 查找每一部门的最高薪水。
+
+```sql
+select e.DepartmentId, MAX(e.Salary) as Salary, d.Name as Department from Employee as e inner join Department as d on e.DepartmentId = d.Id group by e.DepartmentId;
+```
+
+语句执行完成后，生成的表结构如下：
+
+| DepartmentId | Salary | Department |
+| 1            | 9000   | IT         |
+| 2            | 8000   | Sales      |
+
+2. 用上述生成的临时表和Employee表再做级联，找出题目要求的字段。
+
+select t.Department as Department, e.Name as Employee, t.Salary as Salary from Employee as e inner join (1-sql生成的表) as t on e.Salary = t.Salary and and e.DepartmentId = t.DepartmentId;
+
+****
+# **AC SQL**
+
+```sql
+select t.Department as Department, e.Name as Employee, t.Salary as Salary from Employee as e inner join (select e.DepartmentId, MAX(e.Salary) as Salary, d.Name as Department from Employee as e inner join Department as d on e.DepartmentId = d.Id group by e.DepartmentId) as t on e.Salary = t.Salary and e.DepartmentId = t.DepartmentId;
+```

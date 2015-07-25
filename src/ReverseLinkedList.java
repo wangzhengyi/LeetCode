@@ -1,6 +1,7 @@
 public class ReverseLinkedList {
 	private class ListNode {
-		int val;
+		@SuppressWarnings("unused")
+		public int val;
 		ListNode next;
 
 		ListNode(int x) {

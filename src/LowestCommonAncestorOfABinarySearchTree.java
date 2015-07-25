@@ -6,10 +6,6 @@ public class LowestCommonAncestorOfABinarySearchTree {
 		public int val;
 		public TreeNode left;
 		public TreeNode right;
-
-		public TreeNode(int x) {
-			this.val = x;
-		}
 	}
 
 	public TreeNode lowestCommonAncestor(TreeNode root, TreeNode p, TreeNode q) {

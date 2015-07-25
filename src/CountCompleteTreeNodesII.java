@@ -1,6 +1,7 @@
 public class CountCompleteTreeNodesII {
 	private class TreeNode {
-		int val;
+		@SuppressWarnings("unused")
+		public int val;
 		TreeNode left;
 		TreeNode right;
 
